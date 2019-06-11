@@ -448,9 +448,6 @@ public:
 			opponentGloveL = p2HandL.toWorld;
 			opponentGloveR = p2HandR.toWorld;
 
-			c->call("updateScore", p1Score, 1);
-			p2Score = c->call("getScore", 2).as<int>();
-			//cout << glm::to_string(handL->rotation) << endl;
 		}
 		else {// P2
 			p2.toWorld = playerToWorld;
@@ -466,10 +463,11 @@ public:
 			opponentGloveL = p1HandL.toWorld;
 			opponentGloveR = p1HandR.toWorld;
 
-			c->call("updateScore", p1Score, 2);
-			p2Score = c->call("getScore", 1).as<int>();
 		}
-		//cout << glm::to_string(gloveLToWorld) << endl;
+		c->call("updateScore", p1Score, 1);
+		c->call("updateScore", p2Score, 2);
+		p1Score = c->call("getScore", 1).as<int>();
+		p2Score = c->call("getScore", 2).as<int>();
 	}
 
 
