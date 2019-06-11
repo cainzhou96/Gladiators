@@ -81,7 +81,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 2;
+	int id = 1;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -391,12 +391,15 @@ public:
 
 		//cout << "P1 Score" << p1Score << endl;
 		//cout << "P2 Score" << p2Score << endl;
-		
+
+		mainPlayer->draw(shaderID2, projection, view);
+		glm::vec3 lightPos = glm::vec3(0, 20, 0);
+		glUniform3fv(glGetUniformLocation(shaderID2, "lightPos"), 1, &lightPos[0]);
 		glm::mat4 T = glm::translate(glm::mat4(1), glm::vec3(0, -1, 0));
 		glm::mat4 S = glm::scale(glm::mat4(1), glm::vec3(PLATFORM_RADIUS));
 		platform->Draw(shaderID2, projection, view, S*T);
 		spikes->Draw(shaderID2, projection, view, S*T);
-		mainPlayer->draw(shaderID2, projection, view);
+		
 		glm::mat4 R = glm::rotate(glm::mat4(1), glm::radians(180.0f), glm::vec3(0, 1, 0));
 		if (id == 1) {
 			glm::mat4 toWorld = glm::scale(opponentToWorld, glm::vec3(HEAD_SCALE2)) * R; 

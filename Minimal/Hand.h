@@ -21,6 +21,8 @@ public:
 
 	void Draw(GLuint shader, const glm::mat4 & projection, const glm::mat4 & view) {
 		model->setColor(color); 
+		glm::vec3 lightPos = glm::vec3(0, -10, 10);
+		glUniform3fv(glGetUniformLocation(shader, "lightPos"), 1, &lightPos[0]);
 		model->Draw(shader, projection, view, toWorld);
 	}
 
