@@ -42,10 +42,12 @@ int main()
 	{
 		if (id == 1) {
 			player1.toWorld = p.toWorld;
+			player1.score = p.score;
 			//std::cout << "Player 1 position: " << player1.to_string() << std::endl;
 		}
 		else {
 			player2.toWorld = p.toWorld;
+			player2.score = p.score;
 			//std::cout << "Player 2 position: " << glm::to_string(player2.pos) << std::endl;
 		}
 		
@@ -92,7 +94,7 @@ int main()
 			return p2HandR;
 	});
 
-	/*srv.bind("getScore", [p1Score, p2Score](int id)
+	srv.bind("getScore", [p1Score, &p2Score](int id)
 	{
 		if (id == 1)
 			return p1Score;
@@ -108,7 +110,7 @@ int main()
 			p2Score = score;
 		std::cout << "P1: " << p1Score << std::endl;
 		std::cout << "P2: " << p2Score << std::endl;
-	});*/
+	});
 
 
 	// Blocking call to start the server: non-blocking call is srv.async_run(threadsCount);

@@ -22,11 +22,11 @@ struct Transform
 
 struct Mat4
 {
-
+	int score;
 	glm::mat4 toWorld;
 
 	// rpc Macro to generate serialize code for the struct (Note: for glm object, manually specify x,y,z,w)
-	MSGPACK_DEFINE_MAP(
+	MSGPACK_DEFINE_MAP(score,
 		toWorld[0][0], toWorld[0][1], toWorld[0][2], toWorld[0][3], 
 		toWorld[1][0], toWorld[1][1], toWorld[1][2], toWorld[1][3], 
 		toWorld[2][0], toWorld[2][1], toWorld[2][2], toWorld[2][3], 

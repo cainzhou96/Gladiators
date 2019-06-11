@@ -228,6 +228,8 @@ public:
 
 	void render(const glm::mat4& projection, glm::mat4 headPose, ovrEyeType eye, ovrPosef handPoses[])
 	{
+		updatePlayersFromServer();
+
 		if (status) {
 			float elapsedTime = chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - failed_time).count() * 0.000001;
 			if (!isDead) {
@@ -267,7 +269,7 @@ public:
 		playerToWorld = mainPlayer->toWorld * this->headPose;
 		playerGloveL = mainPlayer->handL->toWorld;
 		playerGloveR = mainPlayer->handR->toWorld;
-		updatePlayersFromServer();
+		
 		
 
 		// update particles & springs
@@ -464,9 +466,11 @@ public:
 
 		if (id == 1) {
 			p1.toWorld = playerToWorld;
+			p1.score = p1Score;
 			c->call("updatePlayer", p1, id);
 			p2 = c->call("getPlayer", 2).as<Mat4>();
 			opponentToWorld = p2.toWorld;
+			p2Score = p2.score;
 
 			p1HandL.toWorld = playerGloveL;
 			p1HandR.toWorld = playerGloveR;
@@ -475,13 +479,15 @@ public:
 			p2HandR = c->call("getHandR", 2).as<Mat4>();
 			opponentGloveL = p2HandL.toWorld;
 			opponentGloveR = p2HandR.toWorld;
-			//p1Score = c->call("getScore", 1).as<int>();
+			
 		}
 		else {// P2
 			p2.toWorld = playerToWorld;
+			p2.score = p2Score;
 			c->call("updatePlayer", p2, id);
 			p1 = c->call("getPlayer", 1).as<Mat4>();
 			opponentToWorld = p1.toWorld;
+			p1Score = p1.score;
 
 			p2HandL.toWorld = playerGloveL;
 			p2HandR.toWorld = playerGloveR;
@@ -490,10 +496,10 @@ public:
 			p1HandR = c->call("getHandR", 1).as<Mat4>();
 			opponentGloveL = p1HandL.toWorld;
 			opponentGloveR = p1HandR.toWorld;
-			//p2Score = c->call("getScore", 2).as<int>();
+			
 		}
-		
-		
+		//p1Score = c->call("getScore", 1).as<int>();
+		//p2Score = c->call("getScore", 2).as<int>();
 		
 	}
 
