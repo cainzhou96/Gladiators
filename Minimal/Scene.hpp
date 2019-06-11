@@ -211,6 +211,15 @@ public:
 	{
 		if (status) {
 			float elapsedTime = chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - failed_time).count() * 0.000001;
+			if (!isDead) {
+				isDead = true;
+				if (id == 1) {
+					p2Score++;
+				}
+				else {
+					p1Score++;
+				}
+			}
 			if (elapsedTime >= 3.0f) {
 				if (id == 1) {
 					mainPlayer->toWorld = glm::mat4(1); 
@@ -224,15 +233,7 @@ public:
 				failTimeSet = false; 
 				isDead = false;
 			}
-			if (!isDead) {
-				isDead = true;
-				if (id == 1) {
-					p2Score++;
-				}
-				else {
-					p1Score++;
-				}
-			}
+			
 			
 		}
 		if (eye == 0) {
