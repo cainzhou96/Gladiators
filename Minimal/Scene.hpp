@@ -27,7 +27,7 @@ using namespace irrklang;
 #define WIRE_LENGTH 10.0f
 #define KS 20
 #define KD 2
-#define PART_NUM 7
+#define PART_NUM 10
 #define FLY_TIME 1
 #define HEAD_SCALE1 0.01f
 #define HEAD_SCALE2 0.02f
@@ -389,8 +389,8 @@ public:
 			}
 		}
 
-		cout << "P1 Score" << p1Score << endl;
-		cout << "P2 Score" << p2Score << endl;
+		//cout << "P1 Score" << p1Score << endl;
+		//cout << "P2 Score" << p2Score << endl;
 		
 		glm::mat4 T = glm::translate(glm::mat4(1), glm::vec3(0, -1, 0));
 		glm::mat4 S = glm::scale(glm::mat4(1), glm::vec3(PLATFORM_RADIUS));

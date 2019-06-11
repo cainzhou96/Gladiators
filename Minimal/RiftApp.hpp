@@ -60,7 +60,7 @@ public:
 		});
 		// Make the on screen window 1/4 the resolution of the render target
 		_mirrorSize = _renderTargetSize;
-		_mirrorSize /= 4;
+		_mirrorSize /= 2;
 
 		IOD = abs(_viewScaleDesc.HmdToEyePose[0].Position.x);
 	}
