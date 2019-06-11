@@ -34,7 +34,7 @@ using namespace irrklang;
 #define GLOVE_RADIUS 0.2f
 #define PLAYER_RADIUS 1
 #define G 9.8
-#define STRENGTH 0.1
+#define STRENGTH 1
 
 // a class for building and rendering cubes
 class Scene
@@ -129,6 +129,7 @@ class Scene
 	std::chrono::high_resolution_clock::time_point retrieveTimeL;
 	std::chrono::high_resolution_clock::time_point retrieveTimeR;
 	std::chrono::high_resolution_clock::time_point punchTime;
+	std::chrono::high_resolution_clock::time_point oppoPunchTime;
 
 	float curCubeSize = INITIAL_CUBE_SCALE;
 public:
@@ -136,6 +137,7 @@ public:
 	{
 		time = std::chrono::high_resolution_clock::now(); 
 		punchTime = std::chrono::high_resolution_clock::now();
+		oppoPunchTime = std::chrono::high_resolution_clock::now();
 
 		// Create two cube
 		instance_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -0.3)));
@@ -507,15 +509,16 @@ public:
 			playHitSound();
 			punchTime = std::chrono::high_resolution_clock::now();
 		}
-		if (glm::length(playerPos - oppGloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) {
+		if (glm::length(playerPos - oppGloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - punchTime).count() * 0.000001 > 0.1) {
 			glm::vec3 moveVec = STRENGTH * (oppGloveRPos - prevGloveRPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
 			punchTime = std::chrono::high_resolution_clock::now();
 		}
-		if (glm::length(oppPos - gloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS) ||
-			glm::length(oppPos - gloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) {
+		if ((glm::length(oppPos - gloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS) ||
+			glm::length(oppPos - gloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - oppoPunchTime).count() * 0.000001 > 0.1) {
 			playHitSound();
+			oppoPunchTime = std::chrono::high_resolution_clock::now();
 		}
 		opponentPrevGloveL = opponentGloveL; 
 		opponentPrevGloveR = opponentGloveR;
