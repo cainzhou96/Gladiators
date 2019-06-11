@@ -84,10 +84,10 @@ public:
 		moveVelocity = v; 
 	}
 
-	void updatePos(float deltaTime) {
+	bool updatePos(float deltaTime) {
 		if (toWorld[3][1] <= - PLATFORM_RADIUS + 1.0f) { // fail
 			toWorld[3][1] = -PLATFORM_RADIUS + 1.0f;
-			return; 
+			return true;
 		}
 		glm::vec3 friction = glm::vec3(0); 
 		if (glm::length(glm::vec3(headPos.x, 0, headPos.z)) <= PLATFORM_RADIUS + 0.1f && toWorld[3][1] >= 0) { // within ground
