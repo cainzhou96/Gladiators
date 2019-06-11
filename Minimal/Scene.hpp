@@ -169,9 +169,19 @@ public:
 		head1 = new Model("model/rino.obj");
 		head2 = new Model("model/unicorn.obj");
 		gloveL = new Model("model/glove_l.obj");
-		gloveL->setColor(glm::vec3(0.098, 0.098, 0.439)); 
 		gloveR = new Model("model/glove_r.obj");
-		gloveL->setColor(glm::vec3(0.098, 0.098, 0.439));
+		if (id == 1) {
+			mainPlayer->handL->color = glm::vec3(0.098, 0.098, 0.439); 
+			mainPlayer->handR->color = glm::vec3(0.098, 0.098, 0.439);
+			gloveL->setColor(glm::vec3(0.698, 0.133, 0.133));
+			gloveR->setColor(glm::vec3(0.698, 0.133, 0.133));
+		}
+		else {
+			mainPlayer->handL->color = glm::vec3(0.698, 0.133, 0.133);
+			mainPlayer->handR->color = glm::vec3(0.698, 0.133, 0.133);
+			gloveL->setColor(glm::vec3(0.098, 0.098, 0.439));
+			gloveR->setColor(glm::vec3(0.098, 0.098, 0.439));
+		}
 		platform = new Model("model/platform.obj");
 		platform->setColor(glm::vec3(1, 1, 0.878));
 		body = new Model("model/body.obj");
