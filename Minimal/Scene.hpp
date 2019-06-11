@@ -65,6 +65,7 @@ class Scene
 	Model * body;
 	Model * spikes;
 	Model * star;
+	Model * cup;
 
 	glm::mat4 star1Transform;
 	glm::mat4 star2Transform;
@@ -80,7 +81,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 2;
+	int id = 1;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -176,6 +177,7 @@ public:
 		head2 = new Model("model/unicorn.obj");
 		gloveL = new Model("model/glove_l.obj");
 		gloveR = new Model("model/glove_r.obj");
+		cup = new Model("mode/cup.obj");
 		if (id == 1) {
 			mainPlayer->handL->color = glm::vec3(0.098, 0.098, 0.439); 
 			mainPlayer->handR->color = glm::vec3(0.098, 0.098, 0.439);
@@ -235,6 +237,8 @@ public:
 				else {
 					p1Score++;
 				}
+				cout << "P1 Score" << p1Score << endl;
+				cout << "P2 Score" << p2Score << endl;
 			}
 			if (elapsedTime >= 3.0f) {
 				if (id == 1) {
@@ -263,8 +267,7 @@ public:
 		playerGloveL = mainPlayer->handL->toWorld;
 		playerGloveR = mainPlayer->handR->toWorld;
 		updatePlayersFromServer();
-		cout << "P1 Score" << p1Score << endl;
-		cout << "P2 Score" << p2Score << endl;
+		
 
 		// update particles & springs
 		float elapsedTime = chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - time).count() * 0.000001;
@@ -411,6 +414,9 @@ public:
 				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
 			if(p1Score >= 3)
 				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+			if (p1Score >= 4) {
+				cup->Draw(shaderID2, projection, view, glm::mat4(1));
+			}
 		}
 		if (id == 2) {
 			if (p2Score >= 1)
@@ -419,6 +425,9 @@ public:
 				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
 			if (p2Score >= 3)
 				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+			if (p2Score >= 4) {
+				cup->Draw(shaderID2, projection, view, glm::mat4(1));
+			}
 		}
 
 		/*glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
@@ -442,7 +451,7 @@ public:
 
 		//draw skybox
 		glUseProgram(skyboxShader);
-		glm::mat4 S4 = glm::scale(glm::mat4(1), glm::vec3(100));
+		glm::mat4 S4 = glm::scale(glm::mat4(1), glm::vec3(200));
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "projection"), 1, GL_FALSE, &projection[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "model"), 1, GL_FALSE, &S4[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "view"), 1, GL_FALSE, &view[0][0]);
