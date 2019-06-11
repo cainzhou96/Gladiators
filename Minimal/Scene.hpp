@@ -164,8 +164,10 @@ public:
 		gloveR = new Model("model/glove_r.obj");
 		gloveL->color = glm::vec3(0.098, 0.098, 0.439);
 		platform = new Model("model/platform.obj");
+		platform->setColor(glm::vec3(1, 1, 0.878));
 		body = new Model("model/body.obj");
 		spikes = new Model("model/spikes.obj");
+		spikes->setColor(glm::vec3(0.8)); 
 		status = false; 
 
 		skyboxTexture = loadCubemap(faces);
