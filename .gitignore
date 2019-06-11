@@ -283,5 +283,3 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-Minimal/Minimal.vcxproj
-Server/Server.vcxproj
