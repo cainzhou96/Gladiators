@@ -24,8 +24,8 @@ using namespace irrklang;
 
 #define INITIAL_CUBE_SCALE 0.1f
 #define BUFFER_SIZE 30
-#define WIRE_LENGTH 7.0f
-#define KS 20
+#define WIRE_LENGTH 10.0f
+#define KS 25
 #define KD 2
 #define PART_NUM 7
 #define FLY_TIME 1
@@ -81,7 +81,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 1;
+	int id = 2;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -192,7 +192,7 @@ public:
 			gloveR->setColor(glm::vec3(0.098, 0.098, 0.439));
 		}
 		platform = new Model("model/platform.obj");
-		platform->setColor(glm::vec3(1, 1, 0.878));
+		platform->setColor(glm::vec3(1, 0.980, 0.804));
 		body = new Model("model/body.obj");
 		spikes = new Model("model/spikes.obj");
 		spikes->setColor(glm::vec3(0.2)); 
@@ -338,7 +338,7 @@ public:
 				else {
 					if (chrono::duration_cast<chrono::seconds>(std::chrono::high_resolution_clock::now() - retrieveTimeL).count() >= FLY_TIME) { // drag the glove back whatsoever
 						glm::mat4 tempPose = ovr::toGlm(handPoses[ovrHand_Left]);
-						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handL->toWorld[3] - 0.1 * (mainPlayer->handL->toWorld[3] - (mainPlayer->toWorld * this->handPoses[0])[3])), 1);
+						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handL->toWorld[3] - 0.3 * (mainPlayer->handL->toWorld[3] - (mainPlayer->toWorld * this->handPoses[0])[3])), 1);
 						mainPlayer->updatehandPosL(tempPose);
 					}
 					else {
@@ -372,7 +372,7 @@ public:
 				else {
 					if (chrono::duration_cast<chrono::seconds>(std::chrono::high_resolution_clock::now() - retrieveTimeR).count() >= FLY_TIME) { // drag the glove back whatsoever
 						glm::mat4 tempPose = ovr::toGlm(handPoses[ovrHand_Right]);
-						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handR->toWorld[3] - 0.1 * (mainPlayer->handR->toWorld[3] - (mainPlayer->toWorld * this->handPoses[1])[3])), 1);
+						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handR->toWorld[3] - 0.3 * (mainPlayer->handR->toWorld[3] - (mainPlayer->toWorld * this->handPoses[1])[3])), 1);
 						mainPlayer->updatehandPosR(tempPose);
 					}
 					else {
