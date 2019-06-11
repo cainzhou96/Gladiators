@@ -108,6 +108,12 @@ public:
 		else { // out
 			// velocity.y += -3.0f * deltaTime; 
 			toWorld[3] = glm::vec4(glm::vec3(toWorld[3]) + deltaTime * (velocity), 1);
+			glm::vec3 temp = glm::vec3(toWorld[3].x, 0, toWorld[3].z); 
+			if (glm::length(temp) > 40) {
+				temp = glm::normalize(temp) * 40; 
+			}
+			toWorld[3].x = temp.x; 
+			toWorld[3].z = temp.z; 
 		}
 		
 
