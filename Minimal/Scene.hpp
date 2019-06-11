@@ -505,11 +505,13 @@ public:
 			glm::vec3 moveVec = STRENGTH * (oppGloveLPos - prevGloveLPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
+			punchTime = std::chrono::high_resolution_clock::now();
 		}
 		if (glm::length(playerPos - oppGloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) {
 			glm::vec3 moveVec = STRENGTH * (oppGloveRPos - prevGloveRPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
+			punchTime = std::chrono::high_resolution_clock::now();
 		}
 		if (glm::length(oppPos - gloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS) ||
 			glm::length(oppPos - gloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) {
@@ -517,7 +519,6 @@ public:
 		}
 		opponentPrevGloveL = opponentGloveL; 
 		opponentPrevGloveR = opponentGloveR;
-		punchTime = std::chrono::high_resolution_clock::now();
 	}
 
 
