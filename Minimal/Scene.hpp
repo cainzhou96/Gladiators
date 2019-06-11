@@ -79,7 +79,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 1;
+	int id = 2;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -128,12 +128,14 @@ class Scene
 	std::chrono::high_resolution_clock::time_point failed_time;
 	std::chrono::high_resolution_clock::time_point retrieveTimeL;
 	std::chrono::high_resolution_clock::time_point retrieveTimeR;
+	std::chrono::high_resolution_clock::time_point punchTime;
 
 	float curCubeSize = INITIAL_CUBE_SCALE;
 public:
 	Scene()
 	{
 		time = std::chrono::high_resolution_clock::now(); 
+		punchTime = std::chrono::high_resolution_clock::now();
 
 		// Create two cube
 		instance_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -0.3)));
@@ -170,9 +172,19 @@ public:
 		head1 = new Model("model/rino.obj");
 		head2 = new Model("model/unicorn.obj");
 		gloveL = new Model("model/glove_l.obj");
-		gloveL->setColor(glm::vec3(0.098, 0.098, 0.439)); 
 		gloveR = new Model("model/glove_r.obj");
-		gloveL->setColor(glm::vec3(0.098, 0.098, 0.439));
+		if (id == 1) {
+			mainPlayer->handL->color = glm::vec3(0.098, 0.098, 0.439); 
+			mainPlayer->handR->color = glm::vec3(0.098, 0.098, 0.439);
+			gloveL->setColor(glm::vec3(0.698, 0.133, 0.133));
+			gloveR->setColor(glm::vec3(0.698, 0.133, 0.133));
+		}
+		else {
+			mainPlayer->handL->color = glm::vec3(0.698, 0.133, 0.133);
+			mainPlayer->handR->color = glm::vec3(0.698, 0.133, 0.133);
+			gloveL->setColor(glm::vec3(0.098, 0.098, 0.439));
+			gloveR->setColor(glm::vec3(0.098, 0.098, 0.439));
+		}
 		platform = new Model("model/platform.obj");
 		platform->setColor(glm::vec3(1, 1, 0.878));
 		body = new Model("model/body.obj");
@@ -489,7 +501,7 @@ public:
 
 		glm::vec3 prevGloveLPos = glm::vec3(opponentPrevGloveL[3]);
 		glm::vec3 prevGloveRPos = glm::vec3(opponentPrevGloveR[3]);
-		if (glm::length(playerPos - oppGloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) {
+		if (glm::length(playerPos - oppGloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - punchTime).count() * 0.000001 > 0.1) {
 			glm::vec3 moveVec = STRENGTH * (oppGloveLPos - prevGloveLPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
@@ -505,6 +517,7 @@ public:
 		}
 		opponentPrevGloveL = opponentGloveL; 
 		opponentPrevGloveR = opponentGloveR;
+		punchTime = std::chrono::high_resolution_clock::now();
 	}
 
 
