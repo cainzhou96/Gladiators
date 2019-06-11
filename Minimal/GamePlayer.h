@@ -100,7 +100,7 @@ public:
 					velocity = glm::vec3(0);
 				}
 				else {
-					velocity -= glm::normalize(velocity) * 15.0f * deltaTime;
+					velocity -= glm::normalize(velocity) * 5.0f * deltaTime;
 				}
 			}
 			toWorld[3] = glm::vec4(glm::vec3(toWorld[3]) + deltaTime * (velocity + moveVelocity), 1);
