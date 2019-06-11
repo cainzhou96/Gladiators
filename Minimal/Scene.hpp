@@ -34,6 +34,7 @@ using namespace irrklang;
 #define GLOVE_RADIUS 0.2f
 #define PLAYER_RADIUS 1
 #define G 9.8
+#define STRENGTH 0.1
 
 // a class for building and rendering cubes
 class Scene
@@ -78,7 +79,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 1;
+	int id = 2;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -168,9 +169,9 @@ public:
 		head1 = new Model("model/rino.obj");
 		head2 = new Model("model/unicorn.obj");
 		gloveL = new Model("model/glove_l.obj");
-		gloveL->color = glm::vec3(0.098, 0.098, 0.439); 
+		gloveL->setColor(glm::vec3(0.098, 0.098, 0.439)); 
 		gloveR = new Model("model/glove_r.obj");
-		gloveL->color = glm::vec3(0.098, 0.098, 0.439);
+		gloveL->setColor(glm::vec3(0.098, 0.098, 0.439));
 		platform = new Model("model/platform.obj");
 		platform->setColor(glm::vec3(1, 1, 0.878));
 		body = new Model("model/body.obj");
@@ -488,12 +489,12 @@ public:
 		glm::vec3 prevGloveLPos = glm::vec3(opponentPrevGloveL[3]);
 		glm::vec3 prevGloveRPos = glm::vec3(opponentPrevGloveR[3]);
 		if (glm::length(playerPos - oppGloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) {
-			glm::vec3 moveVec = (oppGloveLPos - prevGloveLPos) / elapsedTime;
+			glm::vec3 moveVec = STRENGTH * (oppGloveLPos - prevGloveLPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
 		}
 		if (glm::length(playerPos - oppGloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) {
-			glm::vec3 moveVec = (oppGloveRPos - prevGloveRPos) / elapsedTime;
+			glm::vec3 moveVec = STRENGTH * (oppGloveRPos - prevGloveRPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
 		}

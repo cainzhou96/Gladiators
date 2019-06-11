@@ -87,6 +87,7 @@ public:
 	bool updatePos(float deltaTime) {
 		if (toWorld[3][1] <= - PLATFORM_RADIUS + 1.0f) { // fail
 			toWorld[3][1] = -PLATFORM_RADIUS + 1.0f;
+			velocity = glm::vec3(0); 
 			return true;
 		}
 		glm::vec3 friction = glm::vec3(0); 
