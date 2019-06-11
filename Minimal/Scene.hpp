@@ -464,11 +464,11 @@ public:
 
 		if (id == 1) {
 			p1.toWorld = playerToWorld;
-			p1.score = p1Score;
+			p1.score = p2Score;
 			c->call("updatePlayer", p1, id);
 			p2 = c->call("getPlayer", 2).as<Mat4>();
 			opponentToWorld = p2.toWorld;
-			p2Score = p2.score;
+			p1Score = p2.score;
 
 			p1HandL.toWorld = playerGloveL;
 			p1HandR.toWorld = playerGloveR;
@@ -481,11 +481,11 @@ public:
 		}
 		else {// P2
 			p2.toWorld = playerToWorld;
-			p2.score = p2Score;
+			p2.score = p1Score;
 			c->call("updatePlayer", p2, id);
 			p1 = c->call("getPlayer", 1).as<Mat4>();
 			opponentToWorld = p1.toWorld;
-			p1Score = p1.score;
+			p2Score = p1.score;
 
 			p2HandL.toWorld = playerGloveL;
 			p2HandR.toWorld = playerGloveR;
