@@ -92,7 +92,7 @@ int main()
 			return p2HandR;
 	});
 
-	srv.bind("getScore", [p1Score, p2Score](int id)
+	srv.bind("getScore", [&p1Score, &p2Score](int id)
 	{
 		if (id == 1)
 			return p1Score;
