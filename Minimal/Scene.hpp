@@ -62,6 +62,11 @@ class Scene
 	Model * platform;
 	Model * body;
 	Model * spikes;
+	Model * star;
+
+	glm::mat4 star1Transform;
+	glm::mat4 star2Transform;
+	glm::mat4 star3Transform;
 
 	//glm::mat4 p1ToWorld;
 	//glm::mat4 p2ToWorld;
@@ -163,11 +168,27 @@ public:
 		platform = new Model("model/platform.obj");
 		body = new Model("model/body.obj");
 		spikes = new Model("model/spikes.obj");
+		star = new Model("model/star.obj");
 
 		skyboxTexture = loadCubemap(faces);
 		soundEngine = createIrrKlangDevice();
 		bgm = soundEngine->play2D("sound/BGM.mp3", true, false, true);
 		bgm->setVolume(0.25f);
+
+		glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		glm::mat4 T3 = glm::translate(glm::mat4(1), glm::vec3(19, 15, -10));
+		glm::mat4 R3 = glm::rotate(glm::mat4(1), glm::radians(105.0f), glm::vec3(0, 0, 1));
+		star1Transform = S3 * T3 * R3;
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(21, 0, -11));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(95.0f), glm::vec3(0, 0, 1));
+		star2Transform = S3 * T3 * R3;
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(20, -15, -10));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(85.0f), glm::vec3(0, 0, 1));
+		star3Transform = S3 * T3 * R3;
 
 		if(id == 1)
 			c = new rpc::client("localhost", 8080);
@@ -319,6 +340,25 @@ public:
 		glm::mat4 T2 = glm::translate(glm::mat4(1), glm::vec3(0, -0.8f, 0));
 		glm::mat4 S2 = glm::scale(glm::mat4(1), glm::vec3(0.8f));
 		body->Draw(shaderID2, projection, view, opponentToWorld * T2 * S2);
+		
+		star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
+		star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
+		star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+
+		/*glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		glm::mat4 T3 = glm::translate(glm::mat4(1), glm::vec3(19, 15, -10));
+		glm::mat4 R3 = glm::rotate(glm::mat4(1), glm::radians(105.0f), glm::vec3(0, 0, 1));
+		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(21, 0, -11));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(95.0f), glm::vec3(0, 0, 1));
+		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(20, -15, -10));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(85.0f), glm::vec3(0, 0, 1));
+		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);*/
 
 		gloveL->Draw(shaderID2, projection, view, opponentGloveL);
 		gloveR->Draw(shaderID2, projection, view, opponentGloveR);
@@ -326,9 +366,9 @@ public:
 
 		//draw skybox
 		glUseProgram(skyboxShader);
-		glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(100));
+		glm::mat4 S4 = glm::scale(glm::mat4(1), glm::vec3(100));
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "projection"), 1, GL_FALSE, &projection[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "model"), 1, GL_FALSE, &S3[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "model"), 1, GL_FALSE, &S4[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "view"), 1, GL_FALSE, &view[0][0]);
 		
 		glBindVertexArray(skyboxL->VAO);

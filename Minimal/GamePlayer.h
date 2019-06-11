@@ -5,7 +5,7 @@
 
 #include "Core.h"
 #include "Hand.h"
-#define GLOVE_SCALE  0.0015
+#define GLOVE_SCALE  0.0015f
 #define PLATFORM_RADIUS 20
 
 
