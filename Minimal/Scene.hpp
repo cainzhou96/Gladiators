@@ -78,7 +78,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 2;
+	int id = 1;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -102,6 +102,9 @@ class Scene
 	ISound * bgm;
 	ISound * hit;
 	ISound * fire;
+
+	int p1Score = 0;
+	int p2Score = 0;
 
 	const unsigned int GRID_SIZE{ 5 };
 
@@ -215,6 +218,12 @@ public:
 				}
 				status = false; 
 				failTimeSet = false; 
+			}
+			if (id == 1) {
+				p2Score++;
+			}
+			else {
+				p1Score++;
 			}
 		}
 		if (eye == 0) {
@@ -364,9 +373,28 @@ public:
 		glm::mat4 S2 = glm::scale(glm::mat4(1), glm::vec3(0.8f));
 		body->Draw(shaderID2, projection, view, opponentToWorld * T2 * S2);
 		
-		star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
-		star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
-		star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+		if (id == 1) {
+			switch(p1Score){
+			case 1:
+				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
+			case 2:
+				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
+			case 3:
+				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+				break;
+			}
+		}
+		if (id == 2) {
+			switch (p2Score) {
+			case 1:
+				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
+			case 2:
+				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
+			case 3:
+				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+				break;
+			}
+		}
 
 		/*glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
 		glm::mat4 T3 = glm::translate(glm::mat4(1), glm::vec3(19, 15, -10));
@@ -419,6 +447,9 @@ public:
 			p2HandR = c->call("getHandR", 2).as<Mat4>();
 			opponentGloveL = p2HandL.toWorld;
 			opponentGloveR = p2HandR.toWorld;
+
+			c->call("updateScore", p1Score, 1);
+			p2Score = c->call("getScore", 2).as<int>();
 			//cout << glm::to_string(handL->rotation) << endl;
 		}
 		else {// P2
@@ -434,6 +465,9 @@ public:
 			p1HandR = c->call("getHandR", 1).as<Mat4>();
 			opponentGloveL = p1HandL.toWorld;
 			opponentGloveR = p1HandR.toWorld;
+
+			c->call("updateScore", p1Score, 2);
+			p2Score = c->call("getScore", 1).as<int>();
 		}
 		//cout << glm::to_string(gloveLToWorld) << endl;
 	}
