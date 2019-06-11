@@ -106,6 +106,8 @@ int main()
 			p1Score = score;
 		else
 			p2Score = score;
+		//std::cout << "P1: " << p1Score << std::endl;
+		//std::cout << "P2: " << p2Score << std::endl;
 	});
 
 
