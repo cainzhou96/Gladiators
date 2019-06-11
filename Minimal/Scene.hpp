@@ -29,10 +29,11 @@ using namespace irrklang;
 #define KD 2
 #define PART_NUM 7
 #define FLY_TIME 1
-#define HEAD_SCALE 0.02f
+#define HEAD_SCALE1 0.01f
+#define HEAD_SCALE2 0.02f
 #define MOVE_SPEED 3.0f
-#define GLOVE_RADIUS 0.2f
-#define PLAYER_RADIUS 1
+#define GLOVE_RADIUS 0.1f
+#define PLAYER_RADIUS 0.5
 #define G 9.8
 #define STRENGTH 1
 
@@ -191,8 +192,9 @@ public:
 		platform->setColor(glm::vec3(1, 1, 0.878));
 		body = new Model("model/body.obj");
 		spikes = new Model("model/spikes.obj");
-		spikes->setColor(glm::vec3(0.8)); 
+		spikes->setColor(glm::vec3(0.2)); 
 		star = new Model("model/star.obj");
+		star->setColor(glm::vec3(1, 1, 0)); 
 		status = false; 
 
 		skyboxTexture = loadCubemap(faces);
@@ -390,10 +392,13 @@ public:
 		mainPlayer->draw(shaderID2, projection, view);
 		glm::mat4 R = glm::rotate(glm::mat4(1), glm::radians(180.0f), glm::vec3(0, 1, 0));
 		if (id == 1) {
-			head2->Draw(shaderID2, projection, view, glm::scale(opponentToWorld, glm::vec3(HEAD_SCALE)) * R);	
+			glm::mat4 toWorld = glm::scale(opponentToWorld, glm::vec3(HEAD_SCALE2)) * R; 
+			head2->Draw(shaderID2, projection, view, toWorld);	
 		}
 		else {
-			head1->Draw(shaderID2, projection, view, glm::scale(opponentToWorld, glm::vec3(HEAD_SCALE)) * R);
+			glm::mat4 toWorld = glm::scale(opponentToWorld, glm::vec3(HEAD_SCALE1)) * R; 
+			toWorld[3][1] += 0.15f; 
+			head1->Draw(shaderID2, projection, view, toWorld);
 		}
 		glm::mat4 T2 = glm::translate(glm::mat4(1), glm::vec3(0, -0.8f, 0));
 		glm::mat4 S2 = glm::scale(glm::mat4(1), glm::vec3(0.8f));
@@ -503,20 +508,20 @@ public:
 
 		glm::vec3 prevGloveLPos = glm::vec3(opponentPrevGloveL[3]);
 		glm::vec3 prevGloveRPos = glm::vec3(opponentPrevGloveR[3]);
-		if (glm::length(playerPos - oppGloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - punchTime).count() * 0.000001 > 0.1) {
+		if (glm::length(playerPos - oppGloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - punchTime).count() * 0.000001 > 1) {
 			glm::vec3 moveVec = STRENGTH * (oppGloveLPos - prevGloveLPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
 			punchTime = std::chrono::high_resolution_clock::now();
 		}
-		if (glm::length(playerPos - oppGloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - punchTime).count() * 0.000001 > 0.1) {
+		if (glm::length(playerPos - oppGloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - punchTime).count() * 0.000001 > 1) {
 			glm::vec3 moveVec = STRENGTH * (oppGloveRPos - prevGloveRPos) / elapsedTime;
 			mainPlayer->applyVelocity(moveVec);
 			playHitSound();
 			punchTime = std::chrono::high_resolution_clock::now();
 		}
 		if ((glm::length(oppPos - gloveLPos) < (GLOVE_RADIUS + PLAYER_RADIUS) ||
-			glm::length(oppPos - gloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - oppoPunchTime).count() * 0.000001 > 0.1) {
+			glm::length(oppPos - gloveRPos) < (GLOVE_RADIUS + PLAYER_RADIUS)) && chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - oppoPunchTime).count() * 0.000001 > 1) {
 			playHitSound();
 			oppoPunchTime = std::chrono::high_resolution_clock::now();
 		}
