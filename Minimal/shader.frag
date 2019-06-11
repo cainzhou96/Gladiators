@@ -5,7 +5,7 @@ in vec3 fragNormal;
 in vec2 TexCoord;
 
 uniform sampler2D tex;
-uniform vec3 lightPos = vec3(5,5,5); 
+uniform vec3 lightPos = vec3(1,10,1); 
 uniform vec3 lightColor = vec3(1);
 uniform vec3 objectColor = vec3(1);
 uniform float hasTexture = 0;
