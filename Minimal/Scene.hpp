@@ -81,7 +81,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 1;
+	int id = 2;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -417,22 +417,22 @@ public:
 
 		if (id == 1) {
 			if (p1Score >= 1) 
-				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
+				star->Draw(shaderID2, projection, view, mainPlayer->handR->toWorld * star1Transform);
 			if(p1Score >= 2)
-				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
+				star->Draw(shaderID2, projection, view, mainPlayer->handR->toWorld * star2Transform);
 			if(p1Score >= 3)
-				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+				star->Draw(shaderID2, projection, view, mainPlayer->handR->toWorld * star3Transform);
 			if (p1Score >= 4) {
 				cup->Draw(shaderID2, projection, view, glm::mat4(1));
 			}
 		}
 		if (id == 2) {
 			if (p2Score >= 1)
-				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
+				star->Draw(shaderID2, projection, view, mainPlayer->handR->toWorld * star1Transform);
 			if (p2Score >= 2)
-				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
+				star->Draw(shaderID2, projection, view, mainPlayer->handR->toWorld * star2Transform);
 			if (p2Score >= 3)
-				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+				star->Draw(shaderID2, projection, view, mainPlayer->handR->toWorld * star3Transform);
 			if (p2Score >= 4) {
 				cup->Draw(shaderID2, projection, view, glm::mat4(1));
 			}
