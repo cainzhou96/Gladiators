@@ -73,7 +73,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 1;
+	int id = 2;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -112,7 +112,10 @@ class Scene
 	bool retrievingL = false; 
 	bool retrievingR = false; 
 	bool firstFrame = true; 
+	bool status = false; 
+	bool failTimeSet = false; 
 	std::chrono::high_resolution_clock::time_point time; 
+	std::chrono::high_resolution_clock::time_point failed_time;
 	std::chrono::high_resolution_clock::time_point retrieveTimeL;
 	std::chrono::high_resolution_clock::time_point retrieveTimeR;
 
@@ -163,6 +166,7 @@ public:
 		platform = new Model("model/platform.obj");
 		body = new Model("model/body.obj");
 		spikes = new Model("model/spikes.obj");
+		status = false; 
 
 		skyboxTexture = loadCubemap(faces);
 		soundEngine = createIrrKlangDevice();
@@ -177,6 +181,21 @@ public:
 
 	void render(const glm::mat4& projection, glm::mat4 headPose, ovrEyeType eye, ovrPosef handPoses[])
 	{
+		if (status) {
+			float elapsedTime = chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - failed_time).count() * 0.000001;
+			if (elapsedTime >= 3.0f) {
+				if (id == 1) {
+					mainPlayer->toWorld = glm::mat4(1); 
+					mainPlayer->toWorld[3] = glm::vec4(0, 2.0f, 5, 1);
+				}
+				else {
+					mainPlayer->toWorld = glm::mat4(1);
+					mainPlayer->toWorld[3] = glm::vec4(0, 2.0f, -5, 1);
+				}
+				status = false; 
+				failTimeSet = false; 
+			}
+		}
 		if (eye == 0) {
 			this->headPose = headPose;
 			mainPlayer->headPos = mainPlayer->toWorld * headPose[3]; 
@@ -203,7 +222,11 @@ public:
 
 			// update player
 			mainPlayer->applyVelocity(glm::vec3(0, -G, 0) * elapsedTime);
-			mainPlayer->updatePos(elapsedTime);
+			status = mainPlayer->updatePos(elapsedTime);
+			if (status && !failTimeSet) {
+				failTimeSet = true; 
+				failed_time = std::chrono::high_resolution_clock::now(); 
+			}
 
 			// update left
 			for (int i = 0; i < particlesL.size(); i++) {
@@ -253,7 +276,7 @@ public:
 				else {
 					if (chrono::duration_cast<chrono::seconds>(std::chrono::high_resolution_clock::now() - retrieveTimeL).count() >= FLY_TIME) { // drag the glove back whatsoever
 						glm::mat4 tempPose = ovr::toGlm(handPoses[ovrHand_Left]);
-						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handL->toWorld[3] - 0.05 * (mainPlayer->handL->toWorld[3] - (mainPlayer->toWorld * this->handPoses[0])[3])), 1);
+						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handL->toWorld[3] - 0.1 * (mainPlayer->handL->toWorld[3] - (mainPlayer->toWorld * this->handPoses[0])[3])), 1);
 						mainPlayer->updatehandPosL(tempPose);
 					}
 					else {
@@ -287,7 +310,7 @@ public:
 				else {
 					if (chrono::duration_cast<chrono::seconds>(std::chrono::high_resolution_clock::now() - retrieveTimeR).count() >= FLY_TIME) { // drag the glove back whatsoever
 						glm::mat4 tempPose = ovr::toGlm(handPoses[ovrHand_Right]);
-						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handR->toWorld[3] - 0.05 * (mainPlayer->handR->toWorld[3] - (mainPlayer->toWorld * this->handPoses[1])[3])), 1);
+						tempPose[3] = glm::vec4(glm::vec3(mainPlayer->handR->toWorld[3] - 0.1 * (mainPlayer->handR->toWorld[3] - (mainPlayer->toWorld * this->handPoses[1])[3])), 1);
 						mainPlayer->updatehandPosR(tempPose);
 					}
 					else {
