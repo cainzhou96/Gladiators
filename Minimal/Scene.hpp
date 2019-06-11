@@ -240,6 +240,10 @@ public:
 				}
 				cout << "P1 Score" << p1Score << endl;
 				cout << "P2 Score" << p2Score << endl;
+				c->call("updateScore", p1Score, 1);
+				c->call("updateScore", p2Score, 2);
+				p1Score = c->call("getScore", 1).as<int>();
+				p2Score = c->call("getScore", 2).as<int>();
 			}
 			if (elapsedTime >= 3.0f) {
 				if (id == 1) {
@@ -492,10 +496,7 @@ public:
 			opponentGloveR = p1HandR.toWorld;
 
 		}
-		c->call("updateScore", p1Score, 1);
-		c->call("updateScore", p2Score, 2);
-		p1Score = c->call("getScore", 1).as<int>();
-		p2Score = c->call("getScore", 2).as<int>();
+		
 	}
 
 
