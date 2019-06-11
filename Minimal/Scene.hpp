@@ -79,7 +79,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 2;
+	int id = 1;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -106,6 +106,7 @@ class Scene
 
 	int p1Score = 0;
 	int p2Score = 0;
+	bool isDead = false;
 
 	const unsigned int GRID_SIZE{ 5 };
 
@@ -221,13 +222,18 @@ public:
 				}
 				status = false; 
 				failTimeSet = false; 
+				isDead = false;
 			}
-			if (id == 1) {
-				p2Score++;
+			if (!isDead) {
+				isDead = true;
+				if (id == 1) {
+					p2Score++;
+				}
+				else {
+					p1Score++;
+				}
 			}
-			else {
-				p1Score++;
-			}
+			
 		}
 		if (eye == 0) {
 			this->headPose = headPose;
@@ -240,6 +246,8 @@ public:
 		playerGloveL = mainPlayer->handL->toWorld;
 		playerGloveR = mainPlayer->handR->toWorld;
 		updatePlayersFromServer();
+		cout << "P1 Score" << p1Score << endl;
+		cout << "P2 Score" << p2Score << endl;
 
 		// update particles & springs
 		float elapsedTime = chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - time).count() * 0.000001;
@@ -377,26 +385,20 @@ public:
 		body->Draw(shaderID2, projection, view, opponentToWorld * T2 * S2);
 		
 		if (id == 1) {
-			switch(p1Score){
-			case 1:
+			if (p1Score >= 1) 
 				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
-			case 2:
+			if(p1Score >= 2)
 				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
-			case 3:
+			if(p1Score >= 3)
 				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
-				break;
-			}
 		}
 		if (id == 2) {
-			switch (p2Score) {
-			case 1:
+			if (p2Score >= 1)
 				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
-			case 2:
+			if (p2Score >= 2)
 				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
-			case 3:
+			if (p2Score >= 3)
 				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
-				break;
-			}
 		}
 
 		/*glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
@@ -507,7 +509,7 @@ public:
 
 	void playHitSound() {
 		hit = soundEngine->play2D("sound/hit.mp3", false, false, true);
-		hit->setVolume(0.5f);
+		hit->setVolume(0.25f);
 	}
 
 
