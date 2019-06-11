@@ -81,7 +81,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 2;
+	int id = 1;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -177,7 +177,7 @@ public:
 		head2 = new Model("model/unicorn.obj");
 		gloveL = new Model("model/glove_l.obj");
 		gloveR = new Model("model/glove_r.obj");
-		cup = new Model("mode/cup.obj");
+		cup = new Model("model/cup.obj");
 		cup->setColor(glm::vec3(1, 1, 0)); 
 		if (id == 1) {
 			mainPlayer->handL->color = glm::vec3(0.098, 0.098, 0.439); 
@@ -414,7 +414,7 @@ public:
 		bodyToWorld[1] = glm::vec4(0, 1, 0, 0);
 		bodyToWorld[2] = glm::vec4(0, 0, 1, 0);
 		body->Draw(shaderID2, projection, view, bodyToWorld  * T2 * S2);
-		
+
 		if (id == 1) {
 			if (p1Score >= 1) 
 				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
@@ -438,20 +438,6 @@ public:
 			}
 		}
 
-		/*glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
-		glm::mat4 T3 = glm::translate(glm::mat4(1), glm::vec3(19, 15, -10));
-		glm::mat4 R3 = glm::rotate(glm::mat4(1), glm::radians(105.0f), glm::vec3(0, 0, 1));
-		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);
-
-		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
-		T3 = glm::translate(glm::mat4(1), glm::vec3(21, 0, -11));
-		R3 = glm::rotate(glm::mat4(1), glm::radians(95.0f), glm::vec3(0, 0, 1));
-		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);
-
-		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
-		T3 = glm::translate(glm::mat4(1), glm::vec3(20, -15, -10));
-		R3 = glm::rotate(glm::mat4(1), glm::radians(85.0f), glm::vec3(0, 0, 1));
-		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);*/
 
 		gloveL->Draw(shaderID2, projection, view, opponentGloveL);
 		gloveR->Draw(shaderID2, projection, view, opponentGloveR);
