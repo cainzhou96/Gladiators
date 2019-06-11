@@ -62,6 +62,11 @@ class Scene
 	Model * platform;
 	Model * body;
 	Model * spikes;
+	Model * star;
+
+	glm::mat4 star1Transform;
+	glm::mat4 star2Transform;
+	glm::mat4 star3Transform;
 
 	//glm::mat4 p1ToWorld;
 	//glm::mat4 p2ToWorld;
@@ -73,7 +78,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 2;
+	int id = 1;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -97,6 +102,9 @@ class Scene
 	ISound * bgm;
 	ISound * hit;
 	ISound * fire;
+
+	int p1Score = 0;
+	int p2Score = 0;
 
 	const unsigned int GRID_SIZE{ 5 };
 
@@ -168,12 +176,28 @@ public:
 		body = new Model("model/body.obj");
 		spikes = new Model("model/spikes.obj");
 		spikes->setColor(glm::vec3(0.8)); 
+		star = new Model("model/star.obj");
 		status = false; 
 
 		skyboxTexture = loadCubemap(faces);
 		soundEngine = createIrrKlangDevice();
 		bgm = soundEngine->play2D("sound/BGM.mp3", true, false, true);
 		bgm->setVolume(0.25f);
+
+		glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		glm::mat4 T3 = glm::translate(glm::mat4(1), glm::vec3(19, 15, -10));
+		glm::mat4 R3 = glm::rotate(glm::mat4(1), glm::radians(105.0f), glm::vec3(0, 0, 1));
+		star1Transform = S3 * T3 * R3;
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(21, 0, -11));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(95.0f), glm::vec3(0, 0, 1));
+		star2Transform = S3 * T3 * R3;
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(20, -15, -10));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(85.0f), glm::vec3(0, 0, 1));
+		star3Transform = S3 * T3 * R3;
 
 		if(id == 1)
 			c = new rpc::client("localhost", 8080);
@@ -196,6 +220,12 @@ public:
 				}
 				status = false; 
 				failTimeSet = false; 
+			}
+			if (id == 1) {
+				p2Score++;
+			}
+			else {
+				p1Score++;
 			}
 		}
 		if (eye == 0) {
@@ -344,6 +374,44 @@ public:
 		glm::mat4 T2 = glm::translate(glm::mat4(1), glm::vec3(0, -0.8f, 0));
 		glm::mat4 S2 = glm::scale(glm::mat4(1), glm::vec3(0.8f));
 		body->Draw(shaderID2, projection, view, opponentToWorld * T2 * S2);
+		
+		if (id == 1) {
+			switch(p1Score){
+			case 1:
+				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
+			case 2:
+				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
+			case 3:
+				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+				break;
+			}
+		}
+		if (id == 2) {
+			switch (p2Score) {
+			case 1:
+				star->Draw(shaderID2, projection, view, playerGloveR * star1Transform);
+			case 2:
+				star->Draw(shaderID2, projection, view, playerGloveR * star2Transform);
+			case 3:
+				star->Draw(shaderID2, projection, view, playerGloveR * star3Transform);
+				break;
+			}
+		}
+
+		/*glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		glm::mat4 T3 = glm::translate(glm::mat4(1), glm::vec3(19, 15, -10));
+		glm::mat4 R3 = glm::rotate(glm::mat4(1), glm::radians(105.0f), glm::vec3(0, 0, 1));
+		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(21, 0, -11));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(95.0f), glm::vec3(0, 0, 1));
+		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);
+
+		S3 = glm::scale(glm::mat4(1), glm::vec3(2));
+		T3 = glm::translate(glm::mat4(1), glm::vec3(20, -15, -10));
+		R3 = glm::rotate(glm::mat4(1), glm::radians(85.0f), glm::vec3(0, 0, 1));
+		star->Draw(shaderID2, projection, view, playerGloveR * S3 * T3 * R3);*/
 
 		gloveL->Draw(shaderID2, projection, view, opponentGloveL);
 		gloveR->Draw(shaderID2, projection, view, opponentGloveR);
@@ -351,9 +419,9 @@ public:
 
 		//draw skybox
 		glUseProgram(skyboxShader);
-		glm::mat4 S3 = glm::scale(glm::mat4(1), glm::vec3(100));
+		glm::mat4 S4 = glm::scale(glm::mat4(1), glm::vec3(100));
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "projection"), 1, GL_FALSE, &projection[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "model"), 1, GL_FALSE, &S3[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "model"), 1, GL_FALSE, &S4[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(skyboxShader, "view"), 1, GL_FALSE, &view[0][0]);
 		
 		glBindVertexArray(skyboxL->VAO);
@@ -381,6 +449,9 @@ public:
 			p2HandR = c->call("getHandR", 2).as<Mat4>();
 			opponentGloveL = p2HandL.toWorld;
 			opponentGloveR = p2HandR.toWorld;
+
+			c->call("updateScore", p1Score, 1);
+			p2Score = c->call("getScore", 2).as<int>();
 			//cout << glm::to_string(handL->rotation) << endl;
 		}
 		else {// P2
@@ -396,6 +467,9 @@ public:
 			p1HandR = c->call("getHandR", 1).as<Mat4>();
 			opponentGloveL = p1HandL.toWorld;
 			opponentGloveR = p1HandR.toWorld;
+
+			c->call("updateScore", p1Score, 2);
+			p2Score = c->call("getScore", 1).as<int>();
 		}
 		//cout << glm::to_string(gloveLToWorld) << endl;
 	}

@@ -20,7 +20,8 @@ int main()
 	Mat4 p1HandR;
 	Mat4 p2HandL;
 	Mat4 p2HandR;
-
+	int p1Score = 0;
+	int p2Score = 0;
 
 	//// Define a rpc function: auto echo(string const& s, Player& p){} (return type is deduced)
 	//srv.bind("echo"/*function name*/, [&player1]
@@ -89,6 +90,22 @@ int main()
 			return p1HandR;
 		else
 			return p2HandR;
+	});
+
+	srv.bind("getScore", [p1Score, p2Score](int id)
+	{
+		if (id == 1)
+			return p1Score;
+		else
+			return p2Score;
+	});
+
+	srv.bind("updateScore", [&p1Score, &p2Score](int score, int id)
+	{
+		if (id == 1)
+			p1Score = score;
+		else
+			p2Score = score;
 	});
 
 
