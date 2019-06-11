@@ -31,9 +31,9 @@ using namespace irrklang;
 #define FLY_TIME 1
 #define HEAD_SCALE1 0.01f
 #define HEAD_SCALE2 0.02f
-#define MOVE_SPEED 3.0f
+#define MOVE_SPEED 6.0f
 #define GLOVE_RADIUS 0.1f
-#define PLAYER_RADIUS 0.5
+#define PLAYER_RADIUS 0.8f
 #define G 9.8
 #define STRENGTH 1
 
@@ -81,7 +81,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 1;
+	int id = 2;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
@@ -196,7 +196,7 @@ public:
 		spikes = new Model("model/spikes.obj");
 		spikes->setColor(glm::vec3(0.2)); 
 		star = new Model("model/star.obj");
-		star->setColor(glm::vec3(1, 1, 0)); 
+		// star->setColor(glm::vec3(1, 1, 0)); 
 		status = false; 
 
 		skyboxTexture = loadCubemap(faces);
@@ -387,6 +387,9 @@ public:
 				mainPlayer->updatehandPosR(tempPose);
 			}
 		}
+
+		cout << "P1 Score" << p1Score << endl;
+		cout << "P2 Score" << p2Score << endl;
 		
 		glm::mat4 T = glm::translate(glm::mat4(1), glm::vec3(0, -1, 0));
 		glm::mat4 S = glm::scale(glm::mat4(1), glm::vec3(PLATFORM_RADIUS));
@@ -405,7 +408,11 @@ public:
 		}
 		glm::mat4 T2 = glm::translate(glm::mat4(1), glm::vec3(0, -0.8f, 0));
 		glm::mat4 S2 = glm::scale(glm::mat4(1), glm::vec3(0.8f));
-		body->Draw(shaderID2, projection, view, opponentToWorld * T2 * S2);
+		glm::mat4 bodyToWorld = opponentToWorld; 
+		bodyToWorld[0] = glm::vec4(1, 0, 0, 0); 
+		bodyToWorld[1] = glm::vec4(0, 1, 0, 0);
+		bodyToWorld[2] = glm::vec4(0, 0, 1, 0);
+		body->Draw(shaderID2, projection, view, bodyToWorld  * T2 * S2);
 		
 		if (id == 1) {
 			if (p1Score >= 1) 

@@ -15,7 +15,7 @@ out vec4 FragColor;
 void main()
 {		
 	if(hasTexture == 0){
-		float ambientStrength = 0.1;
+		float ambientStrength = 0.4;
 		vec3 ambient = ambientStrength * lightColor;
   	
 		// diffuse 
