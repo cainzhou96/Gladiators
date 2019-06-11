@@ -79,7 +79,7 @@ class Scene
 	glm::mat4 opponentGloveR;
 	glm::mat4 opponentPrevGloveL; 
 	glm::mat4 opponentPrevGloveR;
-	int id = 2;
+	int id = 1;
 	Mat4 p1;
 	Mat4 p2;
 	Mat4 p1HandL;
