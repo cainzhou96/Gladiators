@@ -228,8 +228,6 @@ public:
 
 	void render(const glm::mat4& projection, glm::mat4 headPose, ovrEyeType eye, ovrPosef handPoses[])
 	{
-		updatePlayersFromServer();
-
 		if (status) {
 			float elapsedTime = chrono::duration_cast<chrono::microseconds>(std::chrono::high_resolution_clock::now() - failed_time).count() * 0.000001;
 			if (!isDead) {
@@ -269,7 +267,7 @@ public:
 		playerToWorld = mainPlayer->toWorld * this->headPose;
 		playerGloveL = mainPlayer->handL->toWorld;
 		playerGloveR = mainPlayer->handR->toWorld;
-		
+		updatePlayersFromServer();
 		
 
 		// update particles & springs
