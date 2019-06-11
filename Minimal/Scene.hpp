@@ -178,6 +178,7 @@ public:
 		gloveL = new Model("model/glove_l.obj");
 		gloveR = new Model("model/glove_r.obj");
 		cup = new Model("mode/cup.obj");
+		cup->setColor(glm::vec3(1, 1, 0)); 
 		if (id == 1) {
 			mainPlayer->handL->color = glm::vec3(0.098, 0.098, 0.439); 
 			mainPlayer->handR->color = glm::vec3(0.098, 0.098, 0.439);
@@ -196,7 +197,7 @@ public:
 		spikes = new Model("model/spikes.obj");
 		spikes->setColor(glm::vec3(0.2)); 
 		star = new Model("model/star.obj");
-		// star->setColor(glm::vec3(1, 1, 0)); 
+		star->setColor(glm::vec3(1, 1, 0)); 
 		status = false; 
 
 		skyboxTexture = loadCubemap(faces);
